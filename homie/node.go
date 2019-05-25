@@ -3,6 +3,7 @@ package homie
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 )
 
@@ -12,9 +13,13 @@ type Node interface {
 	Type() string
 	Device() Device
 	SetDevice(d Device) Node
+
 	NewProperty(name string, propertyType string) Property
 	AddProperty(p Property) Property
 	GetProperty(name string) Property
+	// return sorted slice of node properties
+	PropertyNames() []string
+
 	NodePublisher() NodePublisher
 	SetNodePublisher(publisher NodePublisher) Node
 
@@ -77,6 +82,15 @@ func (n *node) AddProperty(p Property) Property {
 	}
 	n.properties[p.Name()] = p
 	return p
+}
+
+func (n *node) PropertyNames() []string {
+	names := make([]string, 0, len(n.properties))
+	for name := range n.properties {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
 }
 
 func (n *node) NodeTopic(part string) string {

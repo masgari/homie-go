@@ -10,6 +10,7 @@ import (
 // Property homie node property
 type Property interface {
 	Name() string
+	Type() string
 	Value() string
 	SetValue(value string) Property
 	Node() Node
@@ -35,6 +36,10 @@ type property struct {
 
 func (p *property) Name() string {
 	return p.name
+}
+
+func (p *property) Type() string {
+	return p.propertyType
 }
 
 func (p *property) Value() string {
